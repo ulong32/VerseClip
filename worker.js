@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener(() => {
                     pageUrl: {
                         hostEquals: "aipri.jp",
                         pathEquals: "/mypage/myphoto/"
-                    }
+                    },
                 })
             ],
             actions: [new chrome.declarativeContent.ShowAction()]

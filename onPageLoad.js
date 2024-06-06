@@ -4,4 +4,10 @@ const mutationObserver = new MutationObserver(function () {
         chrome.runtime.sendMessage("DL");
     }
 })
-mutationObserver.observe(document.querySelector("div.photo_inner"), { childList: true });
+mutationObserver.observe(document.querySelector("ul.photo_list"), { childList: true });
+
+setTimeout(() => {
+    if (document.querySelectorAll("a.photo_Anchor").length > 0) {
+        chrome.runtime.sendMessage("DL");
+    }
+}, 400);
