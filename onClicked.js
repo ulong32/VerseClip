@@ -52,54 +52,54 @@ function getCurrentYearMonth() {
         String(date.getMonth() + 1).padStart(2, "0")
     );
 }
+params = new URLSearchParams(location.search);
+yearMonth = params.get("setDate") !== null
+    ? params.get("setDate")
+    : getCurrentYearMonth();
 
-photoElems = document.querySelectorAll("a.photo_Anchor");
-photoCount = photoElems.length;
-if (photoCount > 0) {
+
+fetch("https://aipri.jp/mypage/api/myphoto-list", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "X-Requested-With": "XMLHttpRequest",
+        "Cookie": document.cookie
+    },
+    body: `target_ym=${yearMonth}&data_count=999`
+}).then(r => {
+    return r.json();
+}).then((result) => {
+    photoObject = result.data.photo_list;
+    photoCount = photoObject.length;
     document.querySelector("body").insertAdjacentHTML("beforeend", `
 <div id="dlAnnounce" style="border-radius: 20px; position: fixed; right:50px; bottom: 50px; padding: 25px; background-color: white; box-shadow: 0 0 6px 6px #0002">
     <div id="dlText" style="margin: 4px; font-size: 20px;">ダウンロード中... 0 / ${photoCount}</div>
     <progress id="dlProgress" style="width: 100%; margin:4px;" max="${photoCount}" value="0"></progress>
 </div>
     `);
-    photoElems.forEach((element, index) => {
+    dlAnnounce = document.querySelector("#dlAnnounce");
+    dlText = document.querySelector("#dlText");
+    dlProgress = document.querySelector("#dlProgress");
+
+    photoObject.forEach((object, index) => {
         setTimeout(() => {
-            fetch(element.href)
-                .then((response) => response.text())
-                .then((text) => new DOMParser().parseFromString(text, "text/html"))
-                .then((doc) => {
-                    download(
-                        doc.querySelector(".detail_thumbImage").src,
-                        `aipriverse_album_${element.href.slice(39, -1)}.jpg`
-                    );
-                })
+            download(object.photo_file_url, `aipriverse_album_${object.play_date.replace("-", "")}_${object.photo_seq}.jpg`);
         }, index * 100);
     });
-} else {
-    alert("ダウンロードするフォトが存在しません。");
-}
-
-dlAnnounce = document.querySelector("#dlAnnounce");
-dlText = document.querySelector("#dlText");
-dlProgress = document.querySelector("#dlProgress");
+});
 
 function reportCompletion() {
     completedDownloads++;
     dlText.innerText = `ダウンロード中... ${completedDownloads} / ${photoCount}`;
     dlProgress.value = completedDownloads;
     if (completedDownloads === photoCount) {
-        dlText.innerText = "ダウンロード完了。ファイル生成中..."
-        const params = new URLSearchParams(location.search);
-        const yearMonth =
-            params.get("setDate") !== null
-                ? params.get("setDate")
-                : getCurrentYearMonth();
+        dlText.innerText = "ダウンロード完了。ファイル生成中...";
         zip(fileList).then((buffer) => {
             dl({
                 name: "aipriverse_album_" + yearMonth + ".zip",
                 buffer: buffer,
             });
-            dlText.innerText = "ダウンロード完了。ファイル生成終了！"
+            dlText.innerText = "ダウンロード完了。ファイル生成終了！";
             setTimeout(() => {
                 dlAnnounce.animate(
                     [
