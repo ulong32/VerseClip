@@ -11,16 +11,16 @@ chrome.runtime.onInstalled.addListener(() => {
             conditions: [
                 new chrome.declarativeContent.PageStateMatcher({
                     pageUrl: {
-                        hostEquals: "aipri.jp",
-                        pathEquals: "/mypage/myphoto/"
+                        urlMatches: "https://aipri.jp/mypage/myphoto/.*$"
                     },
                 })
             ],
             actions: [new chrome.declarativeContent.ShowAction()]
         };
         chrome.declarativeContent.onPageChanged.addRules([pageMatchRule])
-    })
-})
+    });
+});
+
 
 //アイコンがクリックされたとき
 chrome.action.onClicked.addListener((tab) => {

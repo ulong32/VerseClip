@@ -66,17 +66,16 @@ fetch("https://aipri.jp/mypage/api/myphoto-list", {
         "Cookie": document.cookie
     },
     body: `target_ym=${yearMonth}&data_count=999`
-}).then(r => {
-    return r.json();
-}).then((result) => {
+})
+.then(r => r.json())
+.then((result) => {
     photoObject = result.data.photo_list;
     photoCount = photoObject.length;
     document.querySelector("body").insertAdjacentHTML("beforeend", `
 <div id="dlAnnounce" style="border-radius: 20px; position: fixed; right:50px; bottom: 50px; padding: 25px; background-color: white; box-shadow: 0 0 6px 6px #0002">
     <div id="dlText" style="margin: 4px; font-size: 20px;">ダウンロード中... 0 / ${photoCount}</div>
     <progress id="dlProgress" style="width: 100%; margin:4px;" max="${photoCount}" value="0"></progress>
-</div>
-    `);
+</div>`);
     dlAnnounce = document.querySelector("#dlAnnounce");
     dlText = document.querySelector("#dlText");
     dlProgress = document.querySelector("#dlProgress");
