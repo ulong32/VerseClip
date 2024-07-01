@@ -4,3 +4,4 @@
 
 アイプリ マイキャラページのアルバム画面に表示されるフォトをダウンロードできるツール
 
+[Chrome Web Store](https://chromewebstore.google.com/detail/アイプリバースアルバムダウンローダー/meogmfoncolnmjnkpedhmfbbajmcdfng)
