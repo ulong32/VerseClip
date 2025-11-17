@@ -1,6 +1,8 @@
 photoCount = 0;
 completedDownloads = 0;
 fileList = [];
+myCharaName = document.querySelector("p.savecard_name").textContent;
+console.log(`キャラ名: ${myCharaName}`);
 
 
 // ====== zip.mjs ======
@@ -95,7 +97,7 @@ function reportCompletion() {
         dlText.innerText = "ダウンロード完了。ファイル生成中...";
         zip(fileList).then((buffer) => {
             dl({
-                name: "aipriverse_album_" + yearMonth + ".zip",
+                name: `aipriverse_album_${myCharaName}_${yearMonth}.zip`,
                 buffer: buffer,
             });
             dlText.innerText = "ダウンロード完了。ファイル生成終了！";
