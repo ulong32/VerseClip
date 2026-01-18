@@ -84,7 +84,7 @@ fetch("https://aipri.jp/mypage/api/myphoto-list", {
 
     photoObject.forEach((object, index) => {
         setTimeout(() => {
-            download(object.photo_file_url, `aipriverse_album_${object.play_date.replace("-", "")}_${object.photo_seq}.jpg`);
+            download(object.photo_file_url, `aipriverse_album_${object.play_date.replace(/-/g, "")}_${object.photo_seq}.jpg`);
         }, index * 100);
     });
 });
